@@ -6,8 +6,8 @@ public class VendingMachine {
 
     private final Configuration configuration;
 
-    public VendingMachine() {
-        configuration = new Configuration();
+    public VendingMachine(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     public Long rowsCount() {
