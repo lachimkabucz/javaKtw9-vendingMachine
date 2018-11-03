@@ -9,7 +9,7 @@ public class Main {
         Configuration configuration = new Configuration();
         VendingMachine vendingMachine = new VendingMachine(configuration);
         CustomerOperationController customerOperationController = new CustomerOperationController(vendingMachine);
-        
+
         customerOperationController.printMachine();
     }
 }
