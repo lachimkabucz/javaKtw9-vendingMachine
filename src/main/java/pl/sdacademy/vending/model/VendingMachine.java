@@ -32,7 +32,8 @@ public class VendingMachine {
                 char letter = (char) ('A' + rowNo);
                 int number = colNo + 1;
                 String symbol = "" + letter + number;
-                trays[rowNo][colNo] = new Tray(symbol);
+                Tray tray = Tray.builder(symbol).build();
+                trays[rowNo][colNo] = tray;
             }
         }
     }
