@@ -21,9 +21,13 @@ public class VendingMachine {
                 .getLongProperty(
                         "machine.size.cols",
                         4L);
-        if (rowsCount <= 0) {
+        if (rowsCount <= 0 || rowsCount > 26) {
             throw new IllegalArgumentException(
                     "Row count " + rowsCount + " is invalid");
+        }
+        if (colsCount <= 0 || colsCount > 9) {
+            throw new IllegalArgumentException(
+                    "Col count " + colsCount + " is invalid");
         }
         trays = new Tray[rowsCount.intValue()][colsCount.intValue()];
 
