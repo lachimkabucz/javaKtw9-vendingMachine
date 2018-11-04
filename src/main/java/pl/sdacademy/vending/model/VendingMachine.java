@@ -56,39 +56,53 @@ public class VendingMachine {
         char letter = (char) ('A' + rowNo);
         int number = colNo + 1;
         String symbol = "" + letter + number;
+        Tray.Builder trayBuilder = Tray.builder(symbol).price(price);
         int productProbability = random.nextInt(10);
-        if(productProbability < 1 ){
-            //2 products
-            Tray tray = Tray
-                    .builder(symbol)
-                    .price(price)
-                    .product(new Product("Product"+symbol))
-                    .product(new Product("Product"+symbol))
-                    .build();
-            trays[rowNo][colNo] = tray;
-
+        if (productProbability <5){
+            trayBuilder =
+                    trayBuilder.product(new Product("Product"+symbol));
         }
-        else if (productProbability < 5) {
-            //1 product
 
-            Tray tray = Tray
-                    .builder(symbol)
-                    .price(price)
-                    .product(new Product("Product"+symbol))
-                    .build();
-            trays[rowNo][colNo] = tray;
-
-
+        if(productProbability<1){
+            trayBuilder =
+                    trayBuilder.product(new Product("Product"+symbol));
         }
-        else  {
+        trays[rowNo][colNo] = trayBuilder.build();
 
-            Tray tray = Tray
-                    .builder(symbol)
-                    .price(price)
-                    .build();
-            trays[rowNo][colNo] = tray;
 
-        }
+
+//        if(productProbability < 1 ){
+//            //2 products
+//            Tray tray = Tray
+//                    .builder(symbol)
+//                    .price(price)
+//                    .product(new Product("Product"+symbol))
+//                    .product(new Product("Product"+symbol))
+//                    .build();
+//            trays[rowNo][colNo] = tray;
+//
+//        }
+//        else if (productProbability < 5) {
+//            //1 product
+//
+//            Tray tray = Tray
+//                    .builder(symbol)
+//                    .price(price)
+//                    .product(new Product("Product"+symbol))
+//                    .build();
+//            trays[rowNo][colNo] = tray;
+//
+//
+//        }
+//        else  {
+//
+//            Tray tray = Tray
+//                    .builder(symbol)
+//                    .price(price)
+//                    .build();
+//            trays[rowNo][colNo] = tray;
+//
+//        }
 
 //        Tray tray = Tray
 //                .builder(symbol)
