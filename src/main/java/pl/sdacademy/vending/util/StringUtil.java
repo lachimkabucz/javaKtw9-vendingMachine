@@ -1,6 +1,17 @@
 package pl.sdacademy.vending.util;
 
+import javax.print.DocFlavor;
+
 public class StringUtil {
+
+    public static String duplicateText(String text, Integer count) {
+        StringBuilder duplicatedText = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            duplicatedText = duplicatedText.append(text);
+        }
+        return duplicatedText.toString();
+    }
+
     public static String adjustText(String text, Integer expectedLength) {
         String expandedText = text;
         while (expandedText.length() < expectedLength) {
