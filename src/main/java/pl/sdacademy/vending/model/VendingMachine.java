@@ -58,7 +58,7 @@ public class VendingMachine {
         String symbol = "" + letter + number;
         int productProbability = random.nextInt(10);
         if(productProbability < 1 ){
-            //2produkty
+            //2 products
             Tray tray = Tray
                     .builder(symbol)
                     .price(price)
@@ -69,7 +69,7 @@ public class VendingMachine {
 
         }
         else if (productProbability < 5) {
-            //1product
+            //1 product
 
             Tray tray = Tray
                     .builder(symbol)
