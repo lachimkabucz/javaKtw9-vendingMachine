@@ -1,13 +1,18 @@
 package pl.sdacademy.vending.model;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Queue;
 
-public class Tray {
+
+public class Tray implements Serializable {
+    public static final long serialVersionUID = 1L;
+    public static final int MAX_SIZE = 10;
+
     private String symbol;
     private Long price;
+
     private Queue<Product> products;
 
     private Tray(Builder builder) {
@@ -20,6 +25,14 @@ public class Tray {
         return new Builder(symbol);
     }
 
+    public boolean addProduct(Product product) {
+        if (products.size() < MAX_SIZE) {
+            return products.add(product);
+        } else {
+            return false;
+        }
+    }
+
     public String getSymbol() {
         return symbol;
     }
@@ -28,19 +41,14 @@ public class Tray {
         return price;
     }
 
+
     public Optional<String> firstProductName() {
-//        if (products.peek() != null) {
-//            Product firstProduct = products.peek();
-//            String name = firstProduct.getName();
-//            return Optional.ofNullable(name);
-//        } else {
-//            return Optional.empty();
-//        }
         return Optional.ofNullable(products.peek()).map(Product::getName);
     }
 
+
     public Optional<Product> buyProduct() {
-        return Optional.ofNullable( products.poll());
+        return Optional.ofNullable(products.poll());
     }
 
     public static class Builder {
