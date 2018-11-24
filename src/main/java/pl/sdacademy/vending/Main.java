@@ -2,14 +2,14 @@ package pl.sdacademy.vending;
 
 import pl.sdacademy.vending.controller.CustomerOperationController;
 import pl.sdacademy.vending.controller.EmployeeOperationController;
+import pl.sdacademy.vending.controller.service.CustomerService;
 import pl.sdacademy.vending.controller.service.EmployeeService;
-import pl.sdacademy.vending.model.Product;
 import pl.sdacademy.vending.repository.HardDriveVendingMachineRepository;
+import pl.sdacademy.vending.service.DefaultCustomerService;
 import pl.sdacademy.vending.service.DefaultEmployeeService;
 import pl.sdacademy.vending.service.repository.VendingMachineRepository;
 import pl.sdacademy.vending.util.Configuration;
 
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
@@ -19,10 +19,12 @@ public class Main {
             new HardDriveVendingMachineRepository(configuration);
     EmployeeService employeeService =
             new DefaultEmployeeService(vendingMachineRepository, configuration);
+    CustomerService customerService =
+            new DefaultCustomerService(vendingMachineRepository);
     EmployeeOperationController employeeOperationController =
             new EmployeeOperationController(employeeService);
     CustomerOperationController customerOperationController =
-            new CustomerOperationController(vendingMachineRepository);
+            new CustomerOperationController(customerService);
 
     private void startApplication() {
         while (true) {
@@ -32,15 +34,7 @@ public class Main {
                 UserMenuSelection userSelection = getUserSelection();
                 switch (userSelection) {
                     case BUY_PRODUCT:
-                        System.out.print(" > Tray Symbol: ");
-                        String traySymbol = new Scanner(System.in).nextLine();
-                        Optional<Product> boughtProduct =
-                                customerOperationController.buyProductForSymbol(traySymbol);
-                        if (boughtProduct.isPresent()) {
-                            System.out.println("Here is your " + boughtProduct.get().getName());
-                        } else {
-                            System.out.println("Out of stock");
-                        }
+                        customerOperationController.buyProduct();
                         break;
                     case EXIT:
                         System.out.println("Bye");
@@ -86,6 +80,7 @@ public class Main {
                 case REMOVE_PRODUCT:
                     break;
                 case CHANGE_PRICE:
+                    employeeOperationController.changePrice();
                     break;
                 case EXIT:
                     System.out.println("Going back to user menu");

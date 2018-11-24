@@ -1,5 +1,6 @@
 package pl.sdacademy.vending.controller;
 
+import pl.sdacademy.vending.controller.service.CustomerService;
 import pl.sdacademy.vending.model.Product;
 import pl.sdacademy.vending.model.Tray;
 import pl.sdacademy.vending.model.VendingMachine;
@@ -7,32 +8,42 @@ import pl.sdacademy.vending.service.repository.VendingMachineRepository;
 import pl.sdacademy.vending.util.StringUtil;
 
 import java.util.Optional;
+import java.util.Scanner;
 
-
+/**
+ Top layer of classic architecture, that handles communication with user. It will contain all Customer related operations, that can be invoked.
+ */
 public class CustomerOperationController {
-    private final VendingMachineRepository machineRepository;
-
+    private final CustomerService customerService;
+    // setting, that defines, how many characters is tray width.
     private final Integer trayWidth = 12;
 
-
-    public CustomerOperationController(
-            VendingMachineRepository machineRepository) {
-        this.machineRepository = machineRepository;
+    /**
+     Public constructor that set up all dependencies for this controller.
+     */
+    public CustomerOperationController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
+    /**
+     Main method that is printing machine to the console.
+     */
     public void printMachine() {
-        Optional<VendingMachine> loadedMachine = machineRepository.load();
+        Optional<VendingMachine> loadedMachine = customerService.loadMachineToPrint();
         if (!loadedMachine.isPresent()) {
             System.out.println("Vending Machine out of service");
             return;
         }
         VendingMachine machine = loadedMachine.get();
+        // every row of machine contains trays. Every tray contains few properties, that has to be displayed in another line. Every line has to be completed for all trays at once.
         for (int rowNo = 0; rowNo < machine.rowsCount(); rowNo++) {
+            // first line of trays contains its upper boundary
             for (int colNo = 0; colNo < machine.colsCount(); colNo++) {
                 printUpperBoundary(machine, rowNo, colNo);
             }
-            System.out.println();
+            System.out.println(); // going to next line after previous one is completed
 
+            // second line will contain tray symbols
             for (int colNo = 0; colNo < machine.colsCount(); colNo++) {
                 printSymbol(machine, rowNo, colNo);
             }
@@ -58,23 +69,21 @@ public class CustomerOperationController {
         } // all steps will be repeated for all rows of trays
     }
 
-    public Optional<Product> buyProductForSymbol(String traySymbol) {
-        Optional<VendingMachine> loadedMachine = machineRepository.load();
-        if (loadedMachine.isPresent()) {
-            VendingMachine machine = loadedMachine.get();
-            Optional<Product> boughtProduct =
-                    machine.buyProductWithSymbol(traySymbol);
-            machineRepository.save(machine);
-            return boughtProduct;
+    public void buyProduct() {
+        System.out.print(" > Tray Symbol: ");
+        String traySymbol = new Scanner(System.in).nextLine();
+        Optional<Product> boughtProduct =
+                customerService.buyProductFromTray(traySymbol);
+        if (boughtProduct.isPresent()) {
+            System.out.println("Here is your " + boughtProduct.get().getName());
         } else {
-            System.out.println("Vending Machine out of service");
-            return Optional.empty();
+            System.out.println("Out of stock");
         }
     }
 
     private void printUpperBoundary(VendingMachine machine, int rowNo, int colNo) {
         System.out.print(
-                "+"
+                "+" // left upper corner of tray
                         + StringUtil.duplicateText("-", trayWidth) // multipying "-" character so it will match tray width
                         + "+"); // right upper corner of tray
     }

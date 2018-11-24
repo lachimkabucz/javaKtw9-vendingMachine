@@ -1,11 +1,9 @@
 package pl.sdacademy.vending.controller;
 
 import pl.sdacademy.vending.controller.service.EmployeeService;
-import pl.sdacademy.vending.model.Tray;
 
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class EmployeeOperationController {
 
@@ -18,11 +16,9 @@ public class EmployeeOperationController {
     public void addTray() {
         String traySymbol = getTraySymbolFromUser();
         Long trayPrice = getTrayPriceFromUser();
-        Tray newTray = Tray.builder(traySymbol)
-                .price(trayPrice)
-                .build();
+
         Optional<String> errorMessage =
-                employeeService.addTray(newTray);
+                employeeService.addTray(traySymbol, trayPrice);
         System.out.println(
                 errorMessage.orElse("Tray has been added."));
     }
@@ -44,6 +40,23 @@ public class EmployeeOperationController {
                 employeeService.addProduct(traySymbol, productName, quantity);
         System.out.println(
                 errorMessage.orElse("All products have been added"));
+    }
+
+    public void changePrice() {
+        String traySymbol = getTraySymbolFromUser();
+        Long updatedPrice = getTrayPriceFromUser();
+        Optional<String> errorMessage = employeeService.changePrice(traySymbol,updatedPrice);
+        if(errorMessage.isPresent()){
+            System.out.println(errorMessage.get());
+        }
+        else {
+            System.out.println("Price changed.");
+        }
+
+        // pobierz od użytkownika symbol tacki, nową cenę
+        // wywołać odpowiednią metodę z serwisu
+        // wyświetlić komunikat błedu lub potwierdzenie udanej
+        // operacji
     }
 
     private String getTraySymbolFromUser() {
